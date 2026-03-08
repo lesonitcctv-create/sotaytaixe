@@ -37,6 +37,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setError("Cửa sổ đăng nhập bị chặn. Vui lòng tắt chặn pop-up trong cài đặt trình duyệt và thử lại.");
       } else if (err.code === 'auth/popup-closed-by-user') {
         setError("Bạn đã đóng cửa sổ đăng nhập. Vui lòng thử lại.");
+      } else if (err.code === 'auth/unauthorized-domain') {
+        setError("Tên miền chưa được ủy quyền. Vui lòng liên hệ quản trị viên để thêm tên miền này vào Firebase Console.");
       } else {
         setError("Đăng nhập thất bại: " + (err.message || "Lỗi không xác định"));
       }

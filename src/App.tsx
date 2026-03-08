@@ -54,7 +54,7 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-8">
       <header className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Sổ Tay Tài Xế</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Sổ Tay Tài Xế VinFast</h1>
         {user ? (
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground hidden md:inline">
@@ -76,7 +76,7 @@ function AppContent() {
       <main className="space-y-8">
         {!user ? (
           <div className="text-center py-20">
-            <h2 className="text-2xl font-semibold mb-4">Chào mừng đến với Sổ Tay Tài Xế</h2>
+            <h2 className="text-2xl font-semibold mb-4">Chào mừng đến với Sổ Tay Tài Xế VinFast</h2>
             <p className="text-muted-foreground mb-8">
               Vui lòng đăng nhập để theo dõi lịch sử sạc và xem thống kê.
             </p>
