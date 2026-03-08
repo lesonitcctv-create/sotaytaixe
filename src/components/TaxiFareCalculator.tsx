@@ -23,7 +23,7 @@ import {
   addFareConfig, 
   deleteFareConfig, 
   FareConfig 
-} from '../services/fareConfigService';
+} from '@/services/fareConfigService';
 import { estimateTollFees, TollEstimate } from '../services/tollService';
 
 // Default presets
