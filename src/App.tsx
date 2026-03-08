@@ -83,7 +83,7 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b px-4 h-14 flex items-center justify-between">
+      <header className="sticky top-0 z-20 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b px-4 h-14 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h1 className="text-lg font-bold tracking-tight md:text-xl">Sổ Tay Tài Xế</h1>
         </div>
@@ -103,6 +103,52 @@ function AppContent() {
           </Button>
         )}
       </header>
+
+      {/* Desktop Navigation (Sidebar-like or Top Tabs) - Visible only on MD+ */}
+      {user && (
+        <div className="hidden md:flex sticky top-14 z-10 bg-white border-b px-4 py-2 justify-center gap-2">
+           <Button 
+            variant={activeTab === 'dashboard' ? 'secondary' : 'ghost'} 
+            size="sm" 
+            onClick={() => setActiveTab('dashboard')}
+            className="gap-2"
+           >
+             <LayoutDashboard className="h-4 w-4" /> Tổng quan
+           </Button>
+           <Button 
+            variant={activeTab === 'charging' ? 'secondary' : 'ghost'} 
+            size="sm" 
+            onClick={() => setActiveTab('charging')}
+            className="gap-2"
+           >
+             <Zap className="h-4 w-4" /> Sạc xe
+           </Button>
+           <Button 
+            variant={activeTab === 'revenue' ? 'secondary' : 'ghost'} 
+            size="sm" 
+            onClick={() => setActiveTab('revenue')}
+            className="gap-2"
+           >
+             <DollarSign className="h-4 w-4" /> Doanh thu
+           </Button>
+           <Button 
+            variant={activeTab === 'charts' ? 'secondary' : 'ghost'} 
+            size="sm" 
+            onClick={() => setActiveTab('charts')}
+            className="gap-2"
+           >
+             <BarChart3 className="h-4 w-4" /> Biểu đồ
+           </Button>
+           <Button 
+            variant={activeTab === 'taxi' ? 'secondary' : 'ghost'} 
+            size="sm" 
+            onClick={() => setActiveTab('taxi')}
+            className="gap-2"
+           >
+             <Calculator className="h-4 w-4" /> Tính cước
+           </Button>
+        </div>
+      )}
 
       <main className="flex-1 container max-w-5xl mx-auto p-4 pb-20 md:pb-8">
         {!user ? (
@@ -170,59 +216,13 @@ function AppContent() {
 
       {/* Bottom Navigation for Mobile */}
       {user && (
-        <nav className="fixed bottom-0 left-0 right-0 z-20 bg-background border-t h-16 flex items-center justify-around px-2 md:hidden safe-area-bottom">
+        <nav className="fixed bottom-0 left-0 right-0 z-20 bg-white border-t h-16 flex items-center justify-around px-2 md:hidden safe-area-bottom">
           <NavItem tab="dashboard" icon={LayoutDashboard} label="Tổng quan" />
           <NavItem tab="charging" icon={Zap} label="Sạc xe" />
           <NavItem tab="revenue" icon={DollarSign} label="Doanh thu" />
           <NavItem tab="charts" icon={BarChart3} label="Biểu đồ" />
           <NavItem tab="taxi" icon={Calculator} label="Tính cước" />
         </nav>
-      )}
-
-      {/* Desktop Navigation (Sidebar-like or Top Tabs) - Visible only on MD+ */}
-      {user && (
-        <div className="hidden md:flex fixed top-14 left-0 right-0 bg-muted/30 border-b px-4 py-2 justify-center gap-2">
-           <Button 
-            variant={activeTab === 'dashboard' ? 'secondary' : 'ghost'} 
-            size="sm" 
-            onClick={() => setActiveTab('dashboard')}
-            className="gap-2"
-           >
-             <LayoutDashboard className="h-4 w-4" /> Tổng quan
-           </Button>
-           <Button 
-            variant={activeTab === 'charging' ? 'secondary' : 'ghost'} 
-            size="sm" 
-            onClick={() => setActiveTab('charging')}
-            className="gap-2"
-           >
-             <Zap className="h-4 w-4" /> Sạc xe
-           </Button>
-           <Button 
-            variant={activeTab === 'revenue' ? 'secondary' : 'ghost'} 
-            size="sm" 
-            onClick={() => setActiveTab('revenue')}
-            className="gap-2"
-           >
-             <DollarSign className="h-4 w-4" /> Doanh thu
-           </Button>
-           <Button 
-            variant={activeTab === 'charts' ? 'secondary' : 'ghost'} 
-            size="sm" 
-            onClick={() => setActiveTab('charts')}
-            className="gap-2"
-           >
-             <BarChart3 className="h-4 w-4" /> Biểu đồ
-           </Button>
-           <Button 
-            variant={activeTab === 'taxi' ? 'secondary' : 'ghost'} 
-            size="sm" 
-            onClick={() => setActiveTab('taxi')}
-            className="gap-2"
-           >
-             <Calculator className="h-4 w-4" /> Tính cước
-           </Button>
-        </div>
       )}
     </div>
   );
