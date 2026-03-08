@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
+import { MapPin } from 'lucide-react';
 
 interface ChargeFormProps {
   onSessionAdded: () => void;
@@ -14,7 +15,7 @@ export function ChargeForm({ onSessionAdded }: ChargeFormProps) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    date: new Date().toISOString().slice(0, 16),
+    date: new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().slice(0, 16),
     location: '',
     batteryLevelStart: '',
     batteryLevelEnd: '',
@@ -27,6 +28,25 @@ export function ChargeForm({ onSessionAdded }: ChargeFormProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      alert('Trình duyệt của bạn không hỗ trợ định vị GPS.');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const locationString = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+        setFormData((prev) => ({ ...prev, location: locationString }));
+      },
+      (error) => {
+        console.error('Error getting location:', error);
+        alert('Không thể lấy vị trí. Vui lòng kiểm tra quyền truy cập GPS.');
+      }
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -50,7 +70,7 @@ export function ChargeForm({ onSessionAdded }: ChargeFormProps) {
       await addChargingSession(session);
       onSessionAdded();
       setFormData({
-        date: new Date().toISOString().slice(0, 16),
+        date: new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().slice(0, 16),
         location: '',
         batteryLevelStart: '',
         batteryLevelEnd: '',
@@ -68,10 +88,10 @@ export function ChargeForm({ onSessionAdded }: ChargeFormProps) {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="p-4 md:p-6">
         <CardTitle>Thêm Lần Sạc Mới</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -87,14 +107,25 @@ export function ChargeForm({ onSessionAdded }: ChargeFormProps) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="location">Địa Điểm</Label>
-              <Input
-                id="location"
-                name="location"
-                placeholder="ví dụ: Vincom Center"
-                value={formData.location}
-                onChange={handleChange}
-                required
-              />
+              <div className="flex gap-2">
+                <Input
+                  id="location"
+                  name="location"
+                  placeholder="ví dụ: Vincom Center"
+                  value={formData.location}
+                  onChange={handleChange}
+                  required
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={handleGetLocation}
+                  title="Lấy vị trí hiện tại"
+                >
+                  <MapPin className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="batteryLevelStart">Pin Bắt Đầu %</Label>

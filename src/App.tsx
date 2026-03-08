@@ -17,6 +17,7 @@ function AppContent() {
   const [sessions, setSessions] = useState<ChargingSession[]>([]);
   const [trips, setTrips] = useState<TripRevenue[]>([]);
   const [dataLoading, setDataLoading] = useState(false);
+  const [editingTrip, setEditingTrip] = useState<TripRevenue | null>(null);
 
   const fetchData = async () => {
     if (user) {
@@ -94,10 +95,10 @@ function AppContent() {
             <Dashboard sessions={sessions} trips={trips} />
             
             <Tabs defaultValue="charging" className="space-y-4">
-              <TabsList>
-                <TabsTrigger value="charging">Sạc Xe</TabsTrigger>
-                <TabsTrigger value="trip-revenue">Doanh Thu Chuyến</TabsTrigger>
-                <TabsTrigger value="charts">Biểu Đồ</TabsTrigger>
+              <TabsList className="h-auto flex-wrap justify-start w-full md:w-auto md:justify-center">
+                <TabsTrigger value="charging" className="flex-1 md:flex-none">Sạc Xe</TabsTrigger>
+                <TabsTrigger value="trip-revenue" className="flex-1 md:flex-none">Doanh Thu Chuyến</TabsTrigger>
+                <TabsTrigger value="charts" className="flex-1 md:flex-none">Biểu Đồ</TabsTrigger>
               </TabsList>
 
               <TabsContent value="charging" className="space-y-4">
@@ -109,8 +110,19 @@ function AppContent() {
 
               <TabsContent value="trip-revenue" className="space-y-4">
                 <div className="grid gap-8 md:grid-cols-2">
-                  <TripForm onRecordAdded={fetchData} />
-                  <TripList records={trips} onRecordDeleted={fetchData} />
+                  <TripForm 
+                    onRecordAdded={() => {
+                        fetchData();
+                        setEditingTrip(null);
+                    }} 
+                    editingTrip={editingTrip}
+                    onCancelEdit={() => setEditingTrip(null)}
+                  />
+                  <TripList 
+                    records={trips} 
+                    onRecordDeleted={fetchData} 
+                    onEdit={(trip) => setEditingTrip(trip)}
+                  />
                 </div>
               </TabsContent>
 
