@@ -47,6 +47,8 @@ export function TripList({ records, onRecordDeleted }: TripListProps) {
                 <TableHead>Ngày</TableHead>
                 <TableHead>App</TableHead>
                 <TableHead>Doanh Thu</TableHead>
+                <TableHead>% Chiết Khấu</TableHead>
+                <TableHead>Thực Nhận</TableHead>
                 <TableHead>Quãng Đường</TableHead>
                 <TableHead className="hidden md:table-cell">Ghi Chú</TableHead>
                 <TableHead className="text-right">Hành Động</TableHead>
@@ -58,6 +60,10 @@ export function TripList({ records, onRecordDeleted }: TripListProps) {
                   <TableCell>{record.date.toLocaleDateString()}</TableCell>
                   <TableCell>{record.app}</TableCell>
                   <TableCell>{record.revenue.toLocaleString()} VND</TableCell>
+                  <TableCell>{record.discount}%</TableCell>
+                  <TableCell className="font-bold text-green-600">
+                    {(record.actualRevenue || record.revenue * (1 - (record.discount || 0) / 100)).toLocaleString()} VND
+                  </TableCell>
                   <TableCell>{record.distance} km</TableCell>
                   <TableCell className="hidden md:table-cell max-w-[200px] truncate">
                     {record.notes || '-'}

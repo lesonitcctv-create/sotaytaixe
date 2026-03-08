@@ -7,6 +7,8 @@ export interface TripRevenue {
   date: Date;
   app: 'Xanh SM' | 'Be' | 'Grab';
   revenue: number;
+  discount: number;
+  actualRevenue: number;
   distance: number;
   notes?: string;
 }

@@ -1,16 +1,14 @@
 import { ChargingSession } from '../services/chargeService';
-import { DailyRevenue } from '../services/revenueService';
 import { TripRevenue } from '../services/tripService';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 
 interface ChartsProps {
   sessions: ChargingSession[];
-  revenues: DailyRevenue[];
   trips: TripRevenue[];
 }
 
-export function Charts({ sessions, revenues, trips }: ChartsProps) {
+export function Charts({ sessions, trips }: ChartsProps) {
   // Combine data by date
   const dataMap = new Map<string, { date: string; cost: number; energy: number; revenue: number }>();
 
@@ -22,17 +20,10 @@ export function Charts({ sessions, revenues, trips }: ChartsProps) {
     dataMap.set(date, current);
   });
 
-  revenues.forEach((record) => {
-    const date = record.date.toLocaleDateString();
-    const current = dataMap.get(date) || { date, cost: 0, energy: 0, revenue: 0 };
-    current.revenue += record.revenue;
-    dataMap.set(date, current);
-  });
-
   trips.forEach((record) => {
     const date = record.date.toLocaleDateString();
     const current = dataMap.get(date) || { date, cost: 0, energy: 0, revenue: 0 };
-    current.revenue += record.revenue;
+    current.revenue += (record.actualRevenue || record.revenue);
     dataMap.set(date, current);
   });
 

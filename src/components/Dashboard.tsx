@@ -1,24 +1,22 @@
 import { ChargingSession } from '../services/chargeService';
-import { DailyRevenue } from '../services/revenueService';
 import { TripRevenue } from '../services/tripService';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { BatteryCharging, Zap, DollarSign, TrendingUp } from 'lucide-react';
 
 interface DashboardProps {
   sessions: ChargingSession[];
-  revenues: DailyRevenue[];
   trips: TripRevenue[];
 }
 
-export function Dashboard({ sessions, revenues, trips }: DashboardProps) {
+export function Dashboard({ sessions, trips }: DashboardProps) {
   const totalSessions = sessions.length;
   const totalEnergy = sessions.reduce((sum, session) => sum + session.energyAdded, 0);
   const totalCost = sessions.reduce((sum, session) => sum + session.cost, 0);
   
-  // Calculate total revenue from both daily records and individual trips
-  const totalDailyRevenue = revenues.reduce((sum, record) => sum + record.revenue, 0);
-  const totalTripRevenue = trips.reduce((sum, record) => sum + record.revenue, 0);
-  const totalRevenue = totalDailyRevenue + totalTripRevenue;
+  // Calculate total revenue from individual trips (using actualRevenue if available, or revenue)
+  const totalRevenue = trips.reduce((sum, record) => {
+    return sum + (record.actualRevenue || record.revenue);
+  }, 0);
   
   const totalProfit = totalRevenue - totalCost;
 

@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ChargingSession, getChargingSessions } from './services/chargeService';
-import { DailyRevenue, getDailyRevenues } from './services/revenueService';
 import { TripRevenue, getTripRevenues } from './services/tripService';
 import { Dashboard } from './components/Dashboard';
 import { ChargeForm } from './components/ChargeForm';
 import { ChargeList } from './components/ChargeList';
-import { RevenueForm } from './components/RevenueForm';
-import { RevenueList } from './components/RevenueList';
 import { TripForm } from './components/TripForm';
 import { TripList } from './components/TripList';
 import { Charts } from './components/Charts';
@@ -18,7 +15,6 @@ import { LogIn, LogOut, Loader2 } from 'lucide-react';
 function AppContent() {
   const { user, loading, signIn, logout } = useAuth();
   const [sessions, setSessions] = useState<ChargingSession[]>([]);
-  const [revenues, setRevenues] = useState<DailyRevenue[]>([]);
   const [trips, setTrips] = useState<TripRevenue[]>([]);
   const [dataLoading, setDataLoading] = useState(false);
 
@@ -26,13 +22,11 @@ function AppContent() {
     if (user) {
       setDataLoading(true);
       try {
-        const [sessionsData, revenuesData, tripsData] = await Promise.all([
+        const [sessionsData, tripsData] = await Promise.all([
           getChargingSessions(user.uid),
-          getDailyRevenues(user.uid),
           getTripRevenues(user.uid),
         ]);
         setSessions(sessionsData);
-        setRevenues(revenuesData);
         setTrips(tripsData);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -41,7 +35,6 @@ function AppContent() {
       }
     } else {
       setSessions([]);
-      setRevenues([]);
       setTrips([]);
     }
   };
@@ -93,12 +86,11 @@ function AppContent() {
           </div>
         ) : (
           <>
-            <Dashboard sessions={sessions} revenues={revenues} trips={trips} />
+            <Dashboard sessions={sessions} trips={trips} />
             
             <Tabs defaultValue="charging" className="space-y-4">
               <TabsList>
                 <TabsTrigger value="charging">Sạc Xe</TabsTrigger>
-                <TabsTrigger value="daily-revenue">Doanh Thu Ngày</TabsTrigger>
                 <TabsTrigger value="trip-revenue">Doanh Thu Chuyến</TabsTrigger>
                 <TabsTrigger value="charts">Biểu Đồ</TabsTrigger>
               </TabsList>
@@ -110,13 +102,6 @@ function AppContent() {
                 </div>
               </TabsContent>
 
-              <TabsContent value="daily-revenue" className="space-y-4">
-                <div className="grid gap-8 md:grid-cols-2">
-                  <RevenueForm onRecordAdded={fetchData} />
-                  <RevenueList records={revenues} onRecordDeleted={fetchData} />
-                </div>
-              </TabsContent>
-
               <TabsContent value="trip-revenue" className="space-y-4">
                 <div className="grid gap-8 md:grid-cols-2">
                   <TripForm onRecordAdded={fetchData} />
@@ -125,7 +110,7 @@ function AppContent() {
               </TabsContent>
 
               <TabsContent value="charts" className="space-y-4">
-                <Charts sessions={sessions} revenues={revenues} trips={trips} />
+                <Charts sessions={sessions} trips={trips} />
               </TabsContent>
             </Tabs>
           </>
