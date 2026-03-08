@@ -242,7 +242,7 @@ export function TripForm({ onRecordAdded, editingTrip, onCancelEdit }: TripFormP
                     Hủy
                 </Button>
             )}
-            <Button type="submit" disabled={loading} className="w-full">
+            <Button type="submit" disabled={loading} className="w-full h-12 text-lg font-bold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
                 {loading ? 'Đang lưu...' : (editingTrip ? 'Cập Nhật' : 'Thêm Cuốc Xe')}
             </Button>
           </div>
