@@ -1,0 +1,126 @@
+{
+  "entities": {
+    "ChargingSession": {
+      "title": "Charging Session",
+      "description": "A record of a single EV charging session.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user who owns this session."
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date and time of the charging session."
+        },
+        "location": {
+          "type": "string",
+          "description": "The location where the charging took place."
+        },
+        "batteryLevelStart": {
+          "type": "number",
+          "description": "Battery percentage at the start of charging (0-100)."
+        },
+        "batteryLevelEnd": {
+          "type": "number",
+          "description": "Battery percentage at the end of charging (0-100)."
+        },
+        "energyAdded": {
+          "type": "number",
+          "description": "Amount of energy added in kWh."
+        },
+        "cost": {
+          "type": "number",
+          "description": "Cost of the charging session in VND."
+        },
+        "duration": {
+          "type": "number",
+          "description": "Duration of the charging session in minutes."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Optional notes about the session."
+        }
+      },
+      "required": ["userId", "date", "location", "batteryLevelStart", "batteryLevelEnd", "energyAdded", "cost", "duration"]
+    },
+    "DailyRevenue": {
+      "title": "Daily Revenue",
+      "description": "A record of daily revenue from vehicle operation.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user who owns this record."
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date of the revenue record."
+        },
+        "revenue": {
+          "type": "number",
+          "description": "Total revenue for the day in VND."
+        },
+        "distance": {
+          "type": "number",
+          "description": "Total distance traveled in km."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Optional notes."
+        }
+      },
+      "required": ["userId", "date", "revenue", "distance"]
+    },
+    "TripRevenue": {
+      "title": "Trip Revenue",
+      "description": "A record of revenue from a single trip.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user who owns this record."
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date and time of the trip."
+        },
+        "app": {
+          "type": "string",
+          "enum": ["Xanh SM", "Be", "Grab"],
+          "description": "The app used for the trip."
+        },
+        "revenue": {
+          "type": "number",
+          "description": "Revenue from the trip in VND."
+        },
+        "distance": {
+          "type": "number",
+          "description": "Distance of the trip in km."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Optional notes."
+        }
+      },
+      "required": ["userId", "date", "app", "revenue", "distance"]
+    }
+  },
+  "firestore": {
+    "charging_sessions/{sessionId}": {
+      "schema": "ChargingSession",
+      "description": "Collection of charging sessions."
+    },
+    "daily_revenues/{recordId}": {
+      "schema": "DailyRevenue",
+      "description": "Collection of daily revenue records."
+    },
+    "trip_revenues/{tripId}": {
+      "schema": "TripRevenue",
+      "description": "Collection of trip revenue records."
+    }
+  }
+}

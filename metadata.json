@@ -1,0 +1,5 @@
+{
+  "name": "VinFast Charge Tracker",
+  "description": "Ứng dụng theo dõi và thống kê lịch sử sạc pin cho xe điện VinFast.",
+  "requestFramePermissions": []
+}

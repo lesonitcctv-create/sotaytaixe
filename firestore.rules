@@ -1,0 +1,199 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: charging_sessions
+    // Document ID: {sessionId}
+    // Fields:
+    //   - userId: string (required) - The ID of the user who owns this session.
+    //   - date: timestamp (required) - The date and time of the charging session.
+    //   - location: string (required) - The location where the charging took place.
+    //   - batteryLevelStart: number (required, 0-100) - Battery percentage at start.
+    //   - batteryLevelEnd: number (required, 0-100) - Battery percentage at end.
+    //   - energyAdded: number (required) - Amount of energy added in kWh.
+    //   - cost: number (required) - Cost of the charging session in VND.
+    //   - duration: number (required) - Duration of the charging session in minutes.
+    //   - notes: string (optional) - Optional notes.
+    //
+    // Collection: daily_revenues
+    // Document ID: {recordId}
+    // Fields:
+    //   - userId: string (required) - The ID of the user who owns this record.
+    //   - date: timestamp (required) - The date of the revenue record.
+    //   - revenue: number (required) - Total revenue for the day in VND.
+    //   - distance: number (required) - Total distance traveled in km.
+    //   - notes: string (optional) - Optional notes.
+    //
+    // Collection: trip_revenues
+    // Document ID: {tripId}
+    // Fields:
+    //   - userId: string (required) - The ID of the user who owns this record.
+    //   - date: timestamp (required) - The date and time of the trip.
+    //   - app: string (required, enum: 'Xanh SM', 'Be', 'Grab') - The app used.
+    //   - revenue: number (required) - Revenue from the trip in VND.
+    //   - distance: number (required) - Distance of the trip in km.
+    //   - notes: string (optional) - Optional notes.
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    // Check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if user owns the resource (for user-owned documents)
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Check if user is owner based on document's userId field
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    // Verify UID hasn't been tampered with on create
+    function uidUnchanged() {
+      return !('userId' in request.resource.data) ||
+        request.resource.data.userId == request.auth.uid;
+    }
+
+    // Ensure userId field is not modified on update
+    function uidNotModified() {
+      return !('userId' in request.resource.data) ||
+        request.resource.data.userId == resource.data.userId;
+    }
+
+    // Validate required fields exist
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    // Validate that the document contains only the allowed fields
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    // Validate string length
+    function validStringLength(field, minLen, maxLen) {
+      return request.resource.data[field] is string &&
+        request.resource.data[field].size() >= minLen &&
+        request.resource.data[field].size() <= maxLen;
+    }
+
+    // Validate optional string
+    function isValidOptionalString(field, minLen, maxLen) {
+      return !('field' in request.resource.data) ||
+             (request.resource.data[field] is string &&
+              request.resource.data[field].size() >= minLen &&
+              request.resource.data[field].size() <= maxLen);
+    }
+
+    // Validate number range
+    function isValidNumber(field, min, max) {
+      return request.resource.data[field] is number &&
+        request.resource.data[field] >= min &&
+        request.resource.data[field] <= max;
+    }
+
+    // Validate positive number
+    function isPositiveNumber(field) {
+      return request.resource.data[field] is number &&
+        request.resource.data[field] >= 0;
+    }
+
+    // Domain Validator for Charging Session
+    function isValidChargingSession(data) {
+      return hasRequiredFields(['userId', 'date', 'location', 'batteryLevelStart', 'batteryLevelEnd', 'energyAdded', 'cost', 'duration']) &&
+             // userId validation
+             data.userId is string && data.userId == request.auth.uid &&
+             // date validation (timestamp)
+             data.date is timestamp &&
+             // location validation
+             data.location is string && data.location.size() > 0 && data.location.size() <= 100 &&
+             // battery validation
+             data.batteryLevelStart is number && data.batteryLevelStart >= 0 && data.batteryLevelStart <= 100 &&
+             data.batteryLevelEnd is number && data.batteryLevelEnd >= 0 && data.batteryLevelEnd <= 100 &&
+             data.batteryLevelEnd >= data.batteryLevelStart &&
+             // energy validation
+             data.energyAdded is number && data.energyAdded >= 0 &&
+             // cost validation
+             data.cost is number && data.cost >= 0 &&
+             // duration validation
+             data.duration is number && data.duration >= 0 &&
+             // notes validation (optional)
+             (!('notes' in data) || (data.notes is string && data.notes.size() <= 500));
+    }
+
+    // Domain Validator for Daily Revenue
+    function isValidDailyRevenue(data) {
+      return hasRequiredFields(['userId', 'date', 'revenue', 'distance']) &&
+             // userId validation
+             data.userId is string && data.userId == request.auth.uid &&
+             // date validation (timestamp)
+             data.date is timestamp &&
+             // revenue validation
+             data.revenue is number && data.revenue >= 0 &&
+             // distance validation
+             data.distance is number && data.distance >= 0 &&
+             // notes validation (optional)
+             (!('notes' in data) || (data.notes is string && data.notes.size() <= 500));
+    }
+
+    // Domain Validator for Trip Revenue
+    function isValidTripRevenue(data) {
+      return hasRequiredFields(['userId', 'date', 'app', 'revenue', 'distance']) &&
+             // userId validation
+             data.userId is string && data.userId == request.auth.uid &&
+             // date validation (timestamp)
+             data.date is timestamp &&
+             // app validation
+             data.app is string && (data.app == 'Xanh SM' || data.app == 'Be' || data.app == 'Grab') &&
+             // revenue validation
+             data.revenue is number && data.revenue >= 0 &&
+             // distance validation
+             data.distance is number && data.distance >= 0 &&
+             // notes validation (optional)
+             (!('notes' in data) || (data.notes is string && data.notes.size() <= 500));
+    }
+
+    match /charging_sessions/{sessionId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() &&
+                       isValidChargingSession(request.resource.data) &&
+                       request.resource.data.userId == request.auth.uid;
+      allow update: if isDocOwner() &&
+                       isValidChargingSession(request.resource.data) &&
+                       uidNotModified();
+      allow delete: if isDocOwner();
+    }
+
+    match /daily_revenues/{recordId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() &&
+                       isValidDailyRevenue(request.resource.data) &&
+                       request.resource.data.userId == request.auth.uid;
+      allow update: if isDocOwner() &&
+                       isValidDailyRevenue(request.resource.data) &&
+                       uidNotModified();
+      allow delete: if isDocOwner();
+    }
+
+    match /trip_revenues/{tripId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() &&
+                       isValidTripRevenue(request.resource.data) &&
+                       request.resource.data.userId == request.auth.uid;
+      allow update: if isDocOwner() &&
+                       isValidTripRevenue(request.resource.data) &&
+                       uidNotModified();
+      allow delete: if isDocOwner();
+    }
+  }
+}
