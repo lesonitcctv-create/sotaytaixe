@@ -18,7 +18,7 @@ export function TripForm({ onRecordAdded }: TripFormProps) {
     date: new Date().toISOString().slice(0, 16),
     app: 'Xanh SM',
     revenue: '',
-    discount: '',
+    discount: localStorage.getItem('lastDiscount') || '',
     distance: '',
     notes: '',
   });
@@ -70,11 +70,15 @@ export function TripForm({ onRecordAdded }: TripFormProps) {
 
       await addTripRevenue(record);
       onRecordAdded();
+      
+      // Save discount to localStorage
+      localStorage.setItem('lastDiscount', String(discount));
+
       setFormData({
         date: new Date().toISOString().slice(0, 16),
         app: 'Xanh SM',
         revenue: '',
-        discount: '',
+        discount: String(discount), // Keep the discount for the next entry
         distance: '',
         notes: '',
       });
