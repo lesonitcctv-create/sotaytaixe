@@ -162,7 +162,7 @@ function AppContent() {
                 {error}
               </div>
             )}
-            <Button size="lg" onClick={signIn}>
+            <Button size="lg" onClick={signIn} className="h-14 px-8 text-xl font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
               Bắt Đầu Ngay
             </Button>
           </div>
@@ -207,7 +207,7 @@ function AppContent() {
 
             {activeTab === 'taxi' && (
               <div className="flex justify-center">
-                <TaxiFareCalculator />
+                <TaxiFareCalculator userId={user?.uid} />
               </div>
             )}
           </div>
