@@ -7,6 +7,19 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Patch window.fetch to be writable if possible
+      try {
+        const originalFetch = window.fetch;
+        Object.defineProperty(window, 'fetch', {
+          value: originalFetch,
+          writable: true,
+          configurable: true
+        });
+      } catch (e) {
+        console.warn('Could not patch window.fetch:', e);
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
