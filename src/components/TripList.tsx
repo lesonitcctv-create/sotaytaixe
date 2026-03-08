@@ -45,9 +45,9 @@ export function TripList({ records, onRecordDeleted, onEdit }: TripListProps) {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0 pb-2">
         <CardTitle className="text-xl font-bold">Lịch Sử Cuốc Xe</CardTitle>
-        <div className="w-[140px]">
+        <div className="w-full sm:w-[140px]">
             <Select value={filterApp} onValueChange={setFilterApp}>
                 <SelectTrigger>
                     <SelectValue placeholder="Lọc theo App" />
