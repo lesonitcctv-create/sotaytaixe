@@ -46,49 +46,51 @@ export function Dashboard({ sessions, trips }: DashboardProps) {
   const monthProfit = monthRevenue - monthCost;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Monthly Stats */}
       <div>
-        <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
-          <Calendar className="h-5 w-5" />
-          Thống Kê Tháng {currentMonth + 1}/{currentYear}
+        <h3 className="text-lg font-medium mb-3 flex items-center gap-2">
+          <Calendar className="h-5 w-5 text-primary" />
+          Tháng {currentMonth + 1}/{currentYear}
         </h3>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Số Lần Sạc (Tháng)</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
+              <CardTitle className="text-xs font-medium text-muted-foreground">Số Lần Sạc</CardTitle>
               <BatteryCharging className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{monthSessionsCount}</div>
+            <CardContent className="p-4 pt-0">
+              <div className="text-xl md:text-2xl font-bold">{monthSessionsCount}</div>
             </CardContent>
           </Card>
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Năng Lượng (Tháng)</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
+              <CardTitle className="text-xs font-medium text-muted-foreground">Năng Lượng</CardTitle>
               <Zap className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{monthEnergy.toFixed(2)} kWh</div>
+            <CardContent className="p-4 pt-0">
+              <div className="text-xl md:text-2xl font-bold">{monthEnergy.toFixed(1)} <span className="text-xs font-normal text-muted-foreground">kWh</span></div>
             </CardContent>
           </Card>
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Chi Phí (Tháng)</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
+              <CardTitle className="text-xs font-medium text-muted-foreground">Chi Phí</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{monthCost.toLocaleString()} VND</div>
+            <CardContent className="p-4 pt-0">
+              <div className="text-xl md:text-2xl font-bold truncate" title={`${monthCost.toLocaleString()} VND`}>
+                {(monthCost / 1000).toLocaleString()} <span className="text-xs font-normal text-muted-foreground">k</span>
+              </div>
             </CardContent>
           </Card>
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Lợi Nhuận (Tháng)</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
+              <CardTitle className="text-xs font-medium text-muted-foreground">Lợi Nhuận</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className={`text-2xl font-bold ${monthProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {monthProfit.toLocaleString()} VND
+            <CardContent className="p-4 pt-0">
+              <div className={`text-xl md:text-2xl font-bold truncate ${monthProfit >= 0 ? 'text-green-600' : 'text-red-600'}`} title={`${monthProfit.toLocaleString()} VND`}>
+                {(monthProfit / 1000).toLocaleString()} <span className="text-xs font-normal text-muted-foreground">k</span>
               </div>
             </CardContent>
           </Card>
@@ -97,58 +99,57 @@ export function Dashboard({ sessions, trips }: DashboardProps) {
 
       {/* All Time Stats */}
       <div>
-        <h3 className="text-lg font-medium mb-4">Tổng Quan Tất Cả</h3>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <h3 className="text-lg font-medium mb-3">Tổng Quan</h3>
+        <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Tổng Số Lần Sạc</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
+              <CardTitle className="text-xs font-medium text-muted-foreground">Tổng Sạc</CardTitle>
               <BatteryCharging className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{totalSessions}</div>
-              <p className="text-xs text-muted-foreground">Lần sạc đã ghi nhận</p>
+            <CardContent className="p-4 pt-0">
+              <div className="text-xl md:text-2xl font-bold">{totalSessions}</div>
             </CardContent>
           </Card>
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Tổng Năng Lượng</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
+              <CardTitle className="text-xs font-medium text-muted-foreground">Tổng Điện</CardTitle>
               <Zap className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{totalEnergy.toFixed(2)} kWh</div>
-              <p className="text-xs text-muted-foreground">Tổng năng lượng đã nạp</p>
+            <CardContent className="p-4 pt-0">
+              <div className="text-xl md:text-2xl font-bold">{totalEnergy.toFixed(0)} <span className="text-xs font-normal text-muted-foreground">kWh</span></div>
             </CardContent>
           </Card>
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Tổng Chi Phí</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
+              <CardTitle className="text-xs font-medium text-muted-foreground">Tổng Chi</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{totalCost.toLocaleString()} VND</div>
-              <p className="text-xs text-muted-foreground">Tổng chi tiêu sạc</p>
+            <CardContent className="p-4 pt-0">
+              <div className="text-xl md:text-2xl font-bold truncate">
+                 {(totalCost / 1000000).toFixed(1)} <span className="text-xs font-normal text-muted-foreground">Tr</span>
+              </div>
             </CardContent>
           </Card>
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Tổng Doanh Thu</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
+              <CardTitle className="text-xs font-medium text-muted-foreground">Tổng Thu</CardTitle>
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{totalRevenue.toLocaleString()} VND</div>
-              <p className="text-xs text-muted-foreground">Tổng doanh thu vận hành</p>
+            <CardContent className="p-4 pt-0">
+              <div className="text-xl md:text-2xl font-bold truncate">
+                {(totalRevenue / 1000000).toFixed(1)} <span className="text-xs font-normal text-muted-foreground">Tr</span>
+              </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Lợi Nhuận Ròng</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+          <Card className="col-span-2 md:col-span-4 bg-slate-50 dark:bg-slate-900/50 border-primary/20">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Lợi Nhuận Ròng Tổng Cộng</CardTitle>
+              <DollarSign className="h-4 w-4 text-primary" />
             </CardHeader>
-            <CardContent>
-              <div className={`text-2xl font-bold ${totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {totalProfit.toLocaleString()} VND
+            <CardContent className="p-4 pt-0">
+              <div className={`text-3xl font-bold ${totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {totalProfit.toLocaleString()} <span className="text-lg font-normal text-muted-foreground">VND</span>
               </div>
-              <p className="text-xs text-muted-foreground">Doanh thu - Chi phí sạc</p>
             </CardContent>
           </Card>
         </div>
