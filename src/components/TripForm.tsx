@@ -173,8 +173,8 @@ export function TripForm({ onRecordAdded, editingTrip, onCancelEdit }: TripFormP
                 <SelectTrigger>
                   <SelectValue placeholder="Chọn ứng dụng" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Xanh SM">Xanh SM</SelectItem>
+                <SelectContent className="bg-white">
+                  <SelectItem value="Xanh SM" className="bg-blue-500 text-white focus:bg-blue-600 focus:text-white">Xanh SM</SelectItem>
                   <SelectItem value="Be">Be</SelectItem>
                   <SelectItem value="Grab">Grab</SelectItem>
                 </SelectContent>
