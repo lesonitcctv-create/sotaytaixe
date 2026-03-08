@@ -49,7 +49,7 @@ export function TripList({ records, onRecordDeleted, onEdit }: TripListProps) {
         <CardTitle className="text-xl font-bold">Lịch Sử Cuốc Xe</CardTitle>
         <div className="w-full sm:w-[140px]">
             <Select value={filterApp} onValueChange={setFilterApp}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                     <SelectValue placeholder="Lọc theo App" />
                 </SelectTrigger>
                 <SelectContent>
@@ -62,36 +62,36 @@ export function TripList({ records, onRecordDeleted, onEdit }: TripListProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="rounded-md border">
+        <div className="rounded-md border overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Ngày</TableHead>
-                <TableHead>App</TableHead>
-                <TableHead>Doanh Thu</TableHead>
-                <TableHead>% Chiết Khấu</TableHead>
-                <TableHead>Thực Nhận</TableHead>
-                <TableHead>Quãng Đường</TableHead>
+                <TableHead className="whitespace-nowrap">Ngày</TableHead>
+                <TableHead className="whitespace-nowrap">App</TableHead>
+                <TableHead className="whitespace-nowrap hidden sm:table-cell">Doanh Thu</TableHead>
+                <TableHead className="whitespace-nowrap hidden sm:table-cell">% Chiết Khấu</TableHead>
+                <TableHead className="whitespace-nowrap">Thực Nhận</TableHead>
+                <TableHead className="whitespace-nowrap hidden sm:table-cell">Quãng Đường</TableHead>
                 <TableHead className="hidden md:table-cell">Ghi Chú</TableHead>
-                <TableHead className="text-right">Hành Động</TableHead>
+                <TableHead className="text-right whitespace-nowrap">Hành Động</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredRecords.length > 0 ? (
                 filteredRecords.map((record) => (
                   <TableRow key={record.id}>
-                    <TableCell>{record.date.toLocaleDateString()}</TableCell>
+                    <TableCell className="whitespace-nowrap">{record.date.toLocaleDateString()}</TableCell>
                     <TableCell>{record.app}</TableCell>
-                    <TableCell>{record.revenue.toLocaleString()} VND</TableCell>
-                    <TableCell>{record.discount}%</TableCell>
-                    <TableCell className="font-bold text-green-600">
+                    <TableCell className="hidden sm:table-cell whitespace-nowrap">{record.revenue.toLocaleString()} VND</TableCell>
+                    <TableCell className="hidden sm:table-cell">{record.discount}%</TableCell>
+                    <TableCell className="font-bold text-green-600 whitespace-nowrap">
                       {(record.actualRevenue || record.revenue * (1 - (record.discount || 0) / 100)).toLocaleString()} VND
                     </TableCell>
-                    <TableCell>{record.distance} km</TableCell>
+                    <TableCell className="hidden sm:table-cell whitespace-nowrap">{record.distance} km</TableCell>
                     <TableCell className="hidden md:table-cell max-w-[200px] truncate">
                       {record.notes || '-'}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right whitespace-nowrap">
                       <div className="flex justify-end gap-2">
                           <Button
                               variant="ghost"
