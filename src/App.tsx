@@ -8,6 +8,7 @@ import { ChargeList } from './components/ChargeList';
 import { TripForm } from './components/TripForm';
 import { TripList } from './components/TripList';
 import { Charts } from './components/Charts';
+import { TaxiFareCalculator } from './components/TaxiFareCalculator';
 import { Button } from './components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
 import { LogIn, LogOut, Loader2 } from 'lucide-react';
@@ -99,6 +100,7 @@ function AppContent() {
                 <TabsTrigger value="charging" className="flex-1 md:flex-none">Sạc Xe</TabsTrigger>
                 <TabsTrigger value="trip-revenue" className="flex-1 md:flex-none">Doanh Thu Chuyến</TabsTrigger>
                 <TabsTrigger value="charts" className="flex-1 md:flex-none">Biểu Đồ</TabsTrigger>
+                <TabsTrigger value="taxi-fare" className="flex-1 md:flex-none">Tính Cước</TabsTrigger>
               </TabsList>
 
               <TabsContent value="charging" className="space-y-4">
@@ -128,6 +130,12 @@ function AppContent() {
 
               <TabsContent value="charts" className="space-y-4">
                 <Charts sessions={sessions} trips={trips} />
+              </TabsContent>
+
+              <TabsContent value="taxi-fare" className="space-y-4">
+                <div className="flex justify-center">
+                  <TaxiFareCalculator />
+                </div>
               </TabsContent>
             </Tabs>
           </>
