@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
 import { LogIn, LogOut, Loader2 } from 'lucide-react';
 
 function AppContent() {
-  const { user, loading, signIn, logout } = useAuth();
+  const { user, loading, signIn, logout, error } = useAuth();
   const [sessions, setSessions] = useState<ChargingSession[]>([]);
   const [trips, setTrips] = useState<TripRevenue[]>([]);
   const [dataLoading, setDataLoading] = useState(false);
@@ -54,7 +54,7 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-8">
       <header className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Theo Dõi Sạc VinFast</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Sổ Tay Tài Xế</h1>
         {user ? (
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground hidden md:inline">
@@ -76,10 +76,15 @@ function AppContent() {
       <main className="space-y-8">
         {!user ? (
           <div className="text-center py-20">
-            <h2 className="text-2xl font-semibold mb-4">Chào mừng đến với Theo Dõi Sạc VinFast</h2>
+            <h2 className="text-2xl font-semibold mb-4">Chào mừng đến với Sổ Tay Tài Xế</h2>
             <p className="text-muted-foreground mb-8">
               Vui lòng đăng nhập để theo dõi lịch sử sạc và xem thống kê.
             </p>
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-md max-w-md mx-auto">
+                {error}
+              </div>
+            )}
             <Button size="lg" onClick={signIn}>
               Bắt Đầu
             </Button>
