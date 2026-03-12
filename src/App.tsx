@@ -42,6 +42,14 @@ function AppContent() {
         ]);
         setSessions(sessionsData);
         setTrips(tripsData);
+        
+        // Auto-sync to Google Sheets in the background
+        fetch('/api/sync-sheets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessions: sessionsData, trips: tripsData }),
+        }).catch(err => console.error('Auto-sync failed:', err));
+        
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {

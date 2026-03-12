@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ChargingSession } from '../services/chargeService';
 import { TripRevenue } from '../services/tripService';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -9,6 +10,31 @@ interface DashboardProps {
 }
 
 export function Dashboard({ sessions, trips }: DashboardProps) {
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
+
+  const [yearStr, monthStr] = selectedDate.split('-');
+  const selectedYear = parseInt(yearStr, 10);
+  const selectedMonth = parseInt(monthStr, 10) - 1;
+
+  // Find all unique months from data
+  const allDates = [...sessions.map(s => s.date), ...trips.map(t => t.date)];
+  const uniqueMonths = Array.from(new Set(allDates.map(d => {
+    const date = new Date(d);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+  })));
+  
+  // Ensure current month is always in the list
+  const currentMonthStr = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+  if (!uniqueMonths.includes(currentMonthStr)) {
+    uniqueMonths.push(currentMonthStr);
+  }
+  
+  // Sort descending (newest first)
+  uniqueMonths.sort().reverse();
+
   // All time stats
   const totalSessions = sessions.length;
   const totalEnergy = sessions.reduce((sum, session) => sum + session.energyAdded, 0);
@@ -20,19 +46,15 @@ export function Dashboard({ sessions, trips }: DashboardProps) {
   
   const totalProfit = totalRevenue - totalCost;
 
-  // Current Month stats
-  const now = new Date();
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
-
+  // Selected Month stats
   const thisMonthSessions = sessions.filter(s => {
     const d = new Date(s.date);
-    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+    return d.getMonth() === selectedMonth && d.getFullYear() === selectedYear;
   });
 
   const thisMonthTrips = trips.filter(t => {
     const d = new Date(t.date);
-    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+    return d.getMonth() === selectedMonth && d.getFullYear() === selectedYear;
   });
 
   const monthSessionsCount = thisMonthSessions.length;
@@ -49,10 +71,24 @@ export function Dashboard({ sessions, trips }: DashboardProps) {
     <div className="space-y-6">
       {/* Monthly Stats */}
       <div>
-        <h3 className="text-lg font-medium mb-3 flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-primary" />
-          Tháng {currentMonth + 1}/{currentYear}
-        </h3>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-lg font-medium flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-primary" />
+            Tháng {selectedMonth + 1}/{selectedYear}
+          </h3>
+          <select 
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="flex h-9 w-36 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer"
+          >
+            {uniqueMonths.map(m => {
+              const [y, mo] = m.split('-');
+              return (
+                <option key={m} value={m}>Tháng {parseInt(mo, 10)}/{y}</option>
+              );
+            })}
+          </select>
+        </div>
         <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
