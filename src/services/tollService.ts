@@ -1,6 +1,18 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+let ai: GoogleGenAI | null = null;
+
+const getAI = () => {
+  if (!ai) {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      console.warn("GEMINI_API_KEY is not set. AI features will not work.");
+      return null;
+    }
+    ai = new GoogleGenAI({ apiKey });
+  }
+  return ai;
+};
 
 export interface TollStation {
   name: string;
@@ -17,6 +29,11 @@ export interface TollEstimate {
 
 export const estimateTollFees = async (start: string, end: string): Promise<TollEstimate> => {
   try {
+    const aiClient = getAI();
+    if (!aiClient) {
+      throw new Error("AI client is not initialized. Please check your API key.");
+    }
+
     const prompt = `
       I am planning a taxi trip in Vietnam from "${start}" to "${end}".
       Please estimate the toll fees for a standard 4-seater car (xe con/taxi 4 chỗ) for the most common route.
@@ -35,7 +52,7 @@ export const estimateTollFees = async (start: string, end: string): Promise<Toll
       }
     `;
 
-    const response = await ai.models.generateContent({
+    const response = await aiClient.models.generateContent({
       model: "gemini-2.5-flash",
       contents: prompt,
       config: {
