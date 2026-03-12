@@ -24,7 +24,7 @@ import {
   deleteFareConfig, 
   FareConfig 
 } from '@/services/fareConfigService';
-import { estimateTollFees, TollEstimate } from '../services/tollService';
+import { estimateTollFees, TollEstimate } from '@/services/tollService';
 
 // Default presets
 const DEFAULT_CONFIGS: Omit<FareConfig, 'userId'>[] = [

@@ -37,6 +37,18 @@ service cloud.firestore {
     //   - distance: number (required) - Distance of the trip in km.
     //   - notes: string (optional) - Optional notes.
     //
+    // Collection: fare_configs
+    // Document ID: {configId}
+    // Fields:
+    //   - userId: string (required) - The ID of the user who owns this configuration.
+    //   - name: string (required) - The name of the configuration.
+    //   - openingPrice: string (required) - The opening price.
+    //   - openingDistance: string (required) - The opening distance.
+    //   - nextPrice: string (required) - The price for the next km.
+    //   - longDistancePrice: string (required) - The price for long distance km.
+    //   - longDistanceThreshold: string (required) - The threshold for long distance pricing.
+    //   - waitPrice: string (required) - The price for waiting time.
+    //
     // ===============================================================
 
     // ===============================================================
@@ -163,6 +175,22 @@ service cloud.firestore {
              (!('notes' in data) || (data.notes is string && data.notes.size() <= 500));
     }
 
+    // Domain Validator for Fare Config
+    function isValidFareConfig(data) {
+      return hasRequiredFields(['userId', 'name', 'openingPrice', 'openingDistance', 'nextPrice', 'longDistancePrice', 'longDistanceThreshold', 'waitPrice']) &&
+             // userId validation
+             data.userId is string && data.userId == request.auth.uid &&
+             // name validation
+             data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             // price/distance fields validation (as strings)
+             data.openingPrice is string &&
+             data.openingDistance is string &&
+             data.nextPrice is string &&
+             data.longDistancePrice is string &&
+             data.longDistanceThreshold is string &&
+             data.waitPrice is string;
+    }
+
     match /charging_sessions/{sessionId} {
       allow read: if isDocOwner();
       allow create: if isAuthenticated() &&
@@ -192,6 +220,17 @@ service cloud.firestore {
                        request.resource.data.userId == request.auth.uid;
       allow update: if isDocOwner() &&
                        isValidTripRevenue(request.resource.data) &&
+                       uidNotModified();
+      allow delete: if isDocOwner();
+    }
+
+    match /fare_configs/{configId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() &&
+                       isValidFareConfig(request.resource.data) &&
+                       request.resource.data.userId == request.auth.uid;
+      allow update: if isDocOwner() &&
+                       isValidFareConfig(request.resource.data) &&
                        uidNotModified();
       allow delete: if isDocOwner();
     }

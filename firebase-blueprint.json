@@ -107,6 +107,46 @@
         }
       },
       "required": ["userId", "date", "app", "revenue", "distance"]
+    },
+    "FareConfig": {
+      "title": "Fare Configuration",
+      "description": "A user-defined taxi fare configuration.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user who owns this configuration."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the configuration."
+        },
+        "openingPrice": {
+          "type": "string",
+          "description": "The opening price."
+        },
+        "openingDistance": {
+          "type": "string",
+          "description": "The opening distance."
+        },
+        "nextPrice": {
+          "type": "string",
+          "description": "The price for the next km."
+        },
+        "longDistancePrice": {
+          "type": "string",
+          "description": "The price for long distance km."
+        },
+        "longDistanceThreshold": {
+          "type": "string",
+          "description": "The threshold for long distance pricing."
+        },
+        "waitPrice": {
+          "type": "string",
+          "description": "The price for waiting time."
+        }
+      },
+      "required": ["userId", "name", "openingPrice", "openingDistance", "nextPrice", "longDistancePrice", "longDistanceThreshold", "waitPrice"]
     }
   },
   "firestore": {
@@ -121,6 +161,10 @@
     "trip_revenues/{tripId}": {
       "schema": "TripRevenue",
       "description": "Collection of trip revenue records."
+    },
+    "fare_configs/{configId}": {
+      "schema": "FareConfig",
+      "description": "Collection of user-defined fare configurations."
     }
   }
 }
