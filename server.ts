@@ -45,9 +45,17 @@ async function startServer() {
       // 1. Sync Sessions
       if (sessions && sessions.length > 0) {
         const sessionValues = sessions.map((s: any) => [
-          s.id, s.startTime, s.endTime, s.startBattery, s.endBattery, s.energyAdded, s.cost, s.location
+          s.id, 
+          new Date(s.date).toLocaleString('vi-VN'), 
+          s.location, 
+          s.batteryLevelStart, 
+          s.batteryLevelEnd, 
+          s.energyAdded, 
+          s.cost, 
+          s.duration,
+          s.notes || ''
         ]);
-        sessionValues.unshift(['ID', 'Start Time', 'End Time', 'Start Battery %', 'End Battery %', 'Energy (kWh)', 'Cost', 'Location']);
+        sessionValues.unshift(['ID', 'Ngày sạc', 'Địa điểm', 'Pin bắt đầu (%)', 'Pin kết thúc (%)', 'Năng lượng (kWh)', 'Chi phí (VND)', 'Thời lượng (phút)', 'Ghi chú']);
         
         try {
           await sheets.spreadsheets.values.update({
@@ -58,16 +66,22 @@ async function startServer() {
           });
         } catch (e: any) {
           console.error('Lỗi khi ghi sheet Sessions:', e.message);
-          // Nếu lỗi do sheet không tồn tại, có thể bỏ qua hoặc báo lỗi
         }
       }
 
       // 2. Sync Trips
       if (trips && trips.length > 0) {
         const tripValues = trips.map((t: any) => [
-          t.id, t.date, t.revenue, t.distance, t.tolls, t.platformFee, t.netIncome, t.notes
+          t.id, 
+          new Date(t.date).toLocaleDateString('vi-VN'), 
+          t.app, 
+          t.revenue, 
+          t.discount, 
+          t.actualRevenue || t.revenue, 
+          t.distance, 
+          t.notes || ''
         ]);
-        tripValues.unshift(['ID', 'Date', 'Revenue', 'Distance (km)', 'Tolls', 'Platform Fee', 'Net Income', 'Notes']);
+        tripValues.unshift(['ID', 'Ngày', 'Ứng dụng', 'Doanh thu gốc', 'Chiết khấu/Phí', 'Thực nhận', 'Quãng đường (km)', 'Ghi chú']);
         
         try {
           await sheets.spreadsheets.values.update({
