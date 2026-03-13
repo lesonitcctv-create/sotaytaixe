@@ -1,9 +1,34 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sổ Tay Tài Xế VinFast</title>
+    <title>Sổ Tay Tài Xế VinFast - Quản Lý Sạc & Doanh Thu</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Công cụ đắc lực dành cho tài xế VinFast & Xanh SM. Quản lý lịch sử sạc, theo dõi doanh thu, tính cước taxi và tối ưu hiệu suất làm việc." />
+    <meta name="keywords" content="tài xế vinfast, xanh sm, quản lý sạc xe điện, tính cước taxi, sổ tay tài xế, vinfast driver tool, quản lý doanh thu taxi" />
+    <meta name="author" content="Sổ Tay Tài Xế" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ais-pre-hwmdmklkftstsrdufre2b3-381097657213.asia-southeast1.run.app" />
+    <meta property="og:title" content="Sổ Tay Tài Xế VinFast - Quản Lý Sạc & Doanh Thu" />
+    <meta property="og:description" content="Công cụ hỗ trợ tài xế VinFast theo dõi lịch sử sạc, quản lý thu nhập và tính cước nhanh chóng trên điện thoại." />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&q=80&w=1200&h=630" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://ais-pre-hwmdmklkftstsrdufre2b3-381097657213.asia-southeast1.run.app" />
+    <meta property="twitter:title" content="Sổ Tay Tài Xế VinFast - Quản Lý Sạc & Doanh Thu" />
+    <meta property="twitter:description" content="Công cụ hỗ trợ tài xế VinFast theo dõi lịch sử sạc, quản lý thu nhập và tính cước nhanh chóng trên điện thoại." />
+    <meta property="twitter:image" content="https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&q=80&w=1200&h=630" />
+
+    <meta name="theme-color" content="#00a1e4" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="https://picsum.photos/seed/vinfast/192/192" />
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-99Y8Z9SSCZ"></script>
     <script>
@@ -30,6 +55,15 @@
       }
     </script>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('SW registered!', reg))
+            .catch(err => console.log('SW registration failed: ', err));
+        });
+      }
+    </script>
   </body>
 </html>
 

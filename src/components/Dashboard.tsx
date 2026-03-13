@@ -68,18 +68,22 @@ export function Dashboard({ sessions, trips }: DashboardProps) {
   const monthProfit = monthRevenue - monthCost;
 
   return (
-    <div className="space-y-6">
-      {/* Monthly Stats */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-medium flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-primary" />
-            Tháng {selectedMonth + 1}/{selectedYear}
-          </h3>
+    <div className="space-y-8">
+      {/* Monthly Stats Section */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between px-1">
+          <div className="flex items-center gap-2">
+            <div className="p-2 rounded-xl bg-blue-50">
+              <Calendar className="h-5 w-5 text-[#00a1e4]" />
+            </div>
+            <h3 className="text-xl font-black text-[#003d71] uppercase tracking-tight">
+              Tháng {selectedMonth + 1}/{selectedYear}
+            </h3>
+          </div>
           <select 
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="flex h-9 w-36 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer"
+            className="flex h-10 w-40 rounded-full border-none bg-white shadow-sm px-4 py-2 text-sm font-bold text-[#003d71] transition-all focus:ring-2 focus:ring-[#00a1e4] cursor-pointer"
           >
             {uniqueMonths.map(m => {
               const [y, mo] = m.split('-');
@@ -89,105 +93,117 @@ export function Dashboard({ sessions, trips }: DashboardProps) {
             })}
           </select>
         </div>
-        <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
-              <CardTitle className="text-xs font-medium text-muted-foreground">Số Lần Sạc</CardTitle>
-              <BatteryCharging className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent className="p-4 pt-0">
-              <div className="text-xl md:text-2xl font-bold">{monthSessionsCount}</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
-              <CardTitle className="text-xs font-medium text-muted-foreground">Năng Lượng</CardTitle>
-              <Zap className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent className="p-4 pt-0">
-              <div className="text-xl md:text-2xl font-bold">{monthEnergy.toFixed(1)} <span className="text-xs font-normal text-muted-foreground">kWh</span></div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
-              <CardTitle className="text-xs font-medium text-muted-foreground">Chi Phí</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent className="p-4 pt-0">
-              <div className="text-xl md:text-2xl font-bold truncate" title={`${monthCost.toLocaleString()} VND`}>
-                {(monthCost / 1000).toLocaleString()} <span className="text-xs font-normal text-muted-foreground">k</span>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden group hover:shadow-md transition-all">
+            <CardContent className="p-5">
+              <div className="flex justify-between items-start mb-4">
+                <div className="p-2 rounded-lg bg-blue-50 text-[#00a1e4]">
+                  <BatteryCharging className="h-5 w-5" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Số lần sạc</p>
+                <h4 className="text-3xl font-black text-[#003d71]">{monthSessionsCount}</h4>
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
-              <CardTitle className="text-xs font-medium text-muted-foreground">Lợi Nhuận</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent className="p-4 pt-0">
-              <div className={`text-xl md:text-2xl font-bold truncate ${monthProfit >= 0 ? 'text-green-600' : 'text-red-600'}`} title={`${monthProfit.toLocaleString()} VND`}>
-                {(monthProfit / 1000).toLocaleString()} <span className="text-xs font-normal text-muted-foreground">k</span>
+
+          <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden group hover:shadow-md transition-all">
+            <CardContent className="p-5">
+              <div className="flex justify-between items-start mb-4">
+                <div className="p-2 rounded-lg bg-yellow-50 text-yellow-500">
+                  <Zap className="h-5 w-5" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Năng lượng</p>
+                <h4 className="text-3xl font-black text-[#003d71]">
+                  {monthEnergy.toFixed(1)} <span className="text-sm font-bold text-slate-300">kWh</span>
+                </h4>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden group hover:shadow-md transition-all">
+            <CardContent className="p-5">
+              <div className="flex justify-between items-start mb-4">
+                <div className="p-2 rounded-lg bg-red-50 text-red-500">
+                  <DollarSign className="h-5 w-5" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Chi phí sạc</p>
+                <h4 className="text-3xl font-black text-[#003d71]">
+                  {(monthCost / 1000).toLocaleString()} <span className="text-sm font-bold text-slate-300">k</span>
+                </h4>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden group hover:shadow-md transition-all">
+            <CardContent className="p-5">
+              <div className="flex justify-between items-start mb-4">
+                <div className={`p-2 rounded-lg ${monthProfit >= 0 ? 'bg-green-50 text-green-500' : 'bg-red-50 text-red-500'}`}>
+                  <TrendingUp className="h-5 w-5" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Lợi nhuận</p>
+                <h4 className={`text-3xl font-black ${monthProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {(monthProfit / 1000).toLocaleString()} <span className="text-sm font-bold text-slate-300">k</span>
+                </h4>
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
 
-      {/* All Time Stats */}
-      <div>
-        <h3 className="text-lg font-medium mb-3">Tổng Quan</h3>
-        <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
-              <CardTitle className="text-xs font-medium text-muted-foreground">Tổng Sạc</CardTitle>
-              <BatteryCharging className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent className="p-4 pt-0">
-              <div className="text-xl md:text-2xl font-bold">{totalSessions}</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
-              <CardTitle className="text-xs font-medium text-muted-foreground">Tổng Điện</CardTitle>
-              <Zap className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent className="p-4 pt-0">
-              <div className="text-xl md:text-2xl font-bold">{totalEnergy.toFixed(0)} <span className="text-xs font-normal text-muted-foreground">kWh</span></div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
-              <CardTitle className="text-xs font-medium text-muted-foreground">Tổng Chi</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent className="p-4 pt-0">
-              <div className="text-xl md:text-2xl font-bold truncate">
-                 {(totalCost / 1000000).toFixed(1)} <span className="text-xs font-normal text-muted-foreground">Tr</span>
+      {/* All Time Stats Section */}
+      <div className="space-y-4">
+        <div className="px-1">
+          <h3 className="text-lg font-bold text-slate-400 uppercase tracking-widest">Tổng quan sự nghiệp</h3>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="md:col-span-2 grid grid-cols-2 gap-4">
+            <div className="p-6 rounded-3xl bg-gradient-to-br from-[#003d71] to-[#002a4d] text-white shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-8 opacity-10">
+                <TrendingUp className="w-32 h-32" />
               </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
-              <CardTitle className="text-xs font-medium text-muted-foreground">Tổng Thu</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent className="p-4 pt-0">
-              <div className="text-xl md:text-2xl font-bold truncate">
-                {(totalRevenue / 1000000).toFixed(1)} <span className="text-xs font-normal text-muted-foreground">Tr</span>
+              <p className="text-xs font-bold text-blue-200 uppercase tracking-widest mb-2">Tổng doanh thu</p>
+              <h4 className="text-4xl font-black mb-1">{(totalRevenue / 1000000).toFixed(2)} <span className="text-xl font-medium opacity-60">Tr</span></h4>
+              <p className="text-sm text-blue-100/60 font-medium">Tích lũy từ {totalSessions} phiên sạc</p>
+            </div>
+
+            <div className="p-6 rounded-3xl bg-white shadow-sm border border-slate-100 flex flex-col justify-center">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Tổng điện nạp</p>
+              <div className="flex items-baseline gap-2">
+                <h4 className="text-3xl font-black text-[#003d71]">{totalEnergy.toFixed(0)}</h4>
+                <span className="text-sm font-bold text-slate-300 uppercase">kWh</span>
               </div>
-            </CardContent>
-          </Card>
-          <Card className="col-span-2 md:col-span-4 bg-slate-50 dark:bg-slate-900/50 border-primary/20">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Lợi Nhuận Ròng Tổng Cộng</CardTitle>
-              <DollarSign className="h-4 w-4 text-primary" />
-            </CardHeader>
-            <CardContent className="p-4 pt-0">
-              <div className={`text-3xl font-bold ${totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {totalProfit.toLocaleString()} <span className="text-lg font-normal text-muted-foreground">VND</span>
+              <div className="mt-4 w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                <div className="bg-[#00a1e4] h-full w-3/4 rounded-full" />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+
+          <div className="p-6 rounded-3xl bg-[#00a1e4] text-white shadow-xl flex flex-col justify-between relative overflow-hidden">
+            <div className="absolute -bottom-4 -right-4 p-4 opacity-20">
+              <DollarSign className="w-24 h-24" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-blue-100 uppercase tracking-widest mb-2">Lợi nhuận ròng</p>
+              <h4 className="text-4xl font-black leading-tight">
+                {totalProfit.toLocaleString()}
+                <span className="block text-sm font-medium opacity-70 mt-1 uppercase tracking-tighter">Việt Nam Đồng</span>
+              </h4>
+            </div>
+            <div className="mt-6 flex items-center gap-2 text-xs font-bold bg-white/20 w-fit px-3 py-1 rounded-full">
+              <Zap className="w-3 h-3 fill-current" />
+              Hiệu suất cực tốt
+            </div>
+          </div>
         </div>
       </div>
     </div>
