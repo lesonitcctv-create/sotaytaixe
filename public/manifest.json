@@ -1,6 +1,6 @@
 {
   "name": "Sổ Tay Tài Xế",
-  "short_name": "Tài Xế",
+  "short_name": "Sổ Tay Tài Xế",
   "description": "Sổ tay quản lý doanh thu và chi phí cho tài xế VinFast & Xanh SM.",
   "start_url": "/",
   "display": "standalone",
@@ -8,14 +8,16 @@
   "theme_color": "#003d71",
   "icons": [
     {
-      "src": "https://picsum.photos/seed/vinfast/192/192",
+      "src": "https://raw.githubusercontent.com/sonit-cctv/vinfast-logo/main/logo.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "https://picsum.photos/seed/vinfast/512/512",
+      "src": "https://raw.githubusercontent.com/sonit-cctv/vinfast-logo/main/logo.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
